@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ledger - Login</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      /* Hide elements not needed in print view */
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+
+      /* Copyright notice styling */
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      /* Center the form elements */
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1 class="text-center">Welcome to Ledger!</h1>
+      <div class="form-container">
+        {% if not current_user.is_authenticated %}
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="alert alert-danger" role="alert">{{ messages[0] }}</div>
+        {% endif %} {% endwith %}
+        <form method="POST" action="{{ url_for('login') }}">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('setup') }}" class="btn btn-secondary"
+            >Setup Account</a
+          >
+        </div>
+        {% else %}
+        <div class="alert alert-success text-center" role="alert">
+          You are already logged in!
+          <a href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="copyright">&copy; 2024 By Ledger. All rights reserved.</div>
+  </body>
+</html>

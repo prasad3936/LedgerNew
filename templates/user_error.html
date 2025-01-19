@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Error</title>
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      /* Copyright notice styling */
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;}
+      /* Error message styling */
+      .Error {
+        color: red;
+        font-size: 2rem;
+        text-align: center;
+        margin-top: 100px;
+      }
+    </style>
+    </style>
+  </head>
+  <body>
+    <div class="Error"><h1 >{{ error_message }}</h1>
+    <a href="{{ url_for('login') }}" class="btn btn-secondary"
+          >Back To Login</a>
+  <a href="{{ url_for('setup') }}" class="btn btn-secondary"
+          >Setup Account</a>
+      </div>
+    
+      
+    </button>
+    <div class="copyright">
+      &copy; 2024 By Ledger. All rights reserved.
+    </div>
+  </body>
+</html>

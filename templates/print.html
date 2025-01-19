@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Print Customers</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+    </style>
+    <script>
+      function printPage() {
+        window.print();
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1 class="text-center">Customer List</h1>
+
+      <!-- Display the current date and time of print -->
+      <div class="text-right">
+        <p>
+          <strong>Printed On:</strong> {{ current_datetime.strftime('%Y-%m-%d
+          %H:%M:%S') }}
+        </p>
+      </div>
+
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.mobile }}</td>
+            <td>${{ customer.amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="mt-3">
+        <h4>Total Amount: ${{ total_amount }}</h4>
+        <h4>Total Customers: {{ total_customers }}</h4>
+      </div>
+
+      <div class="text-center mt-4 no-print">
+        <button class="btn btn-secondary" onclick="window.print()">
+          Print
+        </button>
+        <a href="/" class="btn btn-primary">Back to Customers </a>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2024 Kiran Pharmaceuticals. All rights reserved.
+    </div>
+  </body>
+</html>

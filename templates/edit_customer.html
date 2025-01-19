@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Customer</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      /* Copyright notice styling */
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+      /* Remove arrows from number input fields */
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      {% if current_user.is_authenticated %}
+      <h1 class="text-center">Edit Customer</h1>
+      <form method="POST" class="mt-4">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            value="{{ customer.name }}"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="mobile" class="form-label">Mobile</label>
+          <input
+            type="text"
+            class="form-control"
+            id="mobile"
+            name="mobile"
+            value="{{ customer.mobile }}"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="amount" class="form-label">Amount</label>
+          <input
+            type="number"
+            class="form-control"
+            id="amount"
+            name="amount"
+            placeholder="Enter 0 To Start!"
+            value="{{ customer.amount }}"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="/" class="btn btn-secondary">Back</a>
+      </form>
+      {% else %}
+      <h1 class="text-center">Access Denied</h1>
+      <p class="text-center mt-3">You must be logged in to edit a customer.</p>
+      <div class="text-center">
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary"
+          >Back to Home</a
+        >
+      </div>
+      {% endif %}
+    </div>
+    <div class="copyright">&copy; 2024 By Ledger . All rights reserved.</div>
+  </body>
+</html>

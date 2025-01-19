@@ -1,0 +1,285 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ledger - A Customer Management</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap-icons.css" rel="stylesheet" />
+
+    <script>
+      function confirmDelete() {
+        const confirmation = confirm(
+          "Are you sure you want to delete this customer?"
+        );
+        return confirmation; // Returns true if confirmed, false to cancel the deletion
+      }
+    </script>
+    <style>
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+      .container {
+        padding: 0;
+      }
+      .d-flex.justify-content-between.mb-3 {
+        justify-content: space-between;
+      }
+      .actions {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .actions .btn {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      .actions .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      .transaction-form input {
+        width: 100px;
+        margin-right: 5px;
+      }
+      .transaction-buttons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .transaction-container {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .transaction-container .transaction-form,
+      .transaction-container .action-buttons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .table td,
+      .table th {
+        vertical-align: middle;
+      }
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+      }
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+      .top-right-buttons {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      .flash-message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
+      .flash-message.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .flash-message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <!-- Show user-specific welcome message -->
+      {% if current_user.is_authenticated %}
+      <h1 class="text-center">Welcome {{ current_user.username }}</h1>
+      {% else %}
+      <h1 class="text-center">Welcome to Ledger</h1>
+      {% endif %}
+
+      <!-- Flash messages for user feedback -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <!-- Conditionally show add/print/logout buttons for authenticated users -->
+      {% if current_user.is_authenticated %}
+      <div class="top-right-buttons no-print">
+        <a href="/add" class="btn btn-primary">Add Customer</a>
+        <a href="/print_customers" class="btn btn-primary">Print</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+      </div>
+      {% else %}
+      <div class="top-right-buttons no-print">
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-secondary"
+          >Register</a
+        >
+      </div>
+      {% endif %}
+
+      <!-- Search form -->
+      <form action="{{ url_for('search') }}" method="GET" class="mb-3">
+        <div class="d-flex justify-content-center">
+          <input
+            type="text"
+            name="query"
+            class="form-control w-50"
+            placeholder="Search for a customer..."
+            required
+          />
+          <button type="submit" class="btn btn-primary ms-2">Search</button>
+        </div>
+      </form>
+
+      <!-- Customer table -->
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Amount</th>
+            {% if current_user.is_authenticated %}
+            <th class="no-print">Actions</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.mobile }}</td>
+            <td>${{ customer.amount }}</td>
+            {% if current_user.is_authenticated %}
+            <td class="no-print">
+              <div class="transaction-container">
+                <form
+                  action="/transaction/{{ customer.id }}"
+                  method="POST"
+                  class="transaction-form"
+                >
+                  <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    class="form-control"
+                    required
+                    placeholder="Amount"
+                  />
+                  <input
+                    type="text"
+                    id="remark"
+                    name="remark"
+                    class="form-control"
+                    placeholder="Remark"
+                  />
+                  <button
+                    type="submit"
+                    name="action"
+                    value="credit"
+                    class="btn btn-success btn-sm action-buttons"
+                  >
+                    Credit
+                  </button>
+                  <button
+                    type="submit"
+                    name="action"
+                    value="debit"
+                    class="btn btn-danger btn-sm action-buttons"
+                  >
+                    Debit
+                  </button>
+                </form>
+                <div class="action-buttons btn btn-sm">
+                  <a
+                    href="/edit/{{ customer.id }}"
+                    class="btn btn-sm btn-warning"
+                    title="Edit"
+                    >Edit</a
+                  >
+                  <a
+                    href="/delete/{{ customer.id }}"
+                    class="btn btn-sm btn-danger"
+                    onclick="return confirmDelete()"
+                    title="Delete"
+                    >Delete</a
+                  >
+                  <a
+                    href="/print_invoice/{{ customer.id }}"
+                    class="btn btn-sm btn-info"
+                    title="Invoice"
+                    >Invoice</a
+                  >
+                  <a
+                    href="/send_reminder/{{ customer.id }}"
+                    class="btn btn-sm btn-info"
+                    >Send Reminder</a
+                  >
+                </div>
+              </div>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination-container">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for('index', page=1) }}" class="btn btn-secondary"
+          >First</a
+        >
+        <a
+          href="{{ url_for('index', page=pagination.prev_num) }}"
+          class="btn btn-secondary"
+          >Previous</a
+        >
+        {% endif %}
+        <span class="btn btn-secondary disabled"
+          >Page {{ pagination.page }} of {{ pagination.pages }}</span
+        >
+        {% if pagination.has_next %}
+        <a
+          href="{{ url_for('index', page=pagination.next_num) }}"
+          class="btn btn-secondary"
+          >Next</a
+        >
+        <a
+          href="{{ url_for('index', page=pagination.pages) }}"
+          class="btn btn-secondary"
+          >Last</a
+        >
+        {% endif %}
+      </div>
+
+      <div class="text-right mt-3">
+        <h4>Total Amount: ${{ total_amount }}</h4>
+      </div>
+    </div>
+
+    <div class="copyright">&copy; 2024 By Ledger. All rights reserved.</div>
+  </body>
+</html>

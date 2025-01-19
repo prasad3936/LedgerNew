@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+      /* Copyright notice styling */
+      .copyright {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <div class="text-center mb-4">
+        <h1>Customer Invoice</h1>
+        <p>Date: {{ current_datetime.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+      </div>
+      <div class="mb-3">
+        <h4>Customer Details</h4>
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Mobile:</strong> {{ customer.mobile }}</p>
+        <p><strong>Total Amount:</strong> ${{ customer.amount }}</p>
+      </div>
+      <div>
+        <h4>Transaction History</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Remark</th>
+              <!-- New column -->
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in transactions %}
+            <tr>
+              <td>{{ transaction.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              <td>{{ transaction.type.capitalize() }}</td>
+              <td>${{ transaction.amount }}</td>
+              <td>{{ transaction.remark or "N/A" }}</td>
+              <!-- Show remark or N/A -->
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center mt-4 no-print">
+        <button class="btn btn-secondary" onclick="window.print()">
+          Print Invoice
+        </button>
+        <a href="/" class="btn btn-primary">Back to Customers </a>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2024 By Ledger For Kiran Pharmaceuticals. All rights reserved.
+    </div>
+  </body>
+</html>
