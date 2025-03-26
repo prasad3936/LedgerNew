@@ -4,8 +4,8 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from datetime import datetime
 import os
 import threading
-import webview
-import pywhatkit as kit
+#import webview
+#import pywhatkit as kit
 
 app = Flask(__name__)
 
@@ -65,11 +65,14 @@ def generate_click_to_chat_url(customer_name, customer_mobile, reminder_details,
         f"You have the following unpaid bills:\n{reminder_details}\n\n"
         f"Total Amount Due: {amount}\n\n"
         f"Please make the payment at your earliest convenience.\n\n"
-        "Regards,\nYour Store Name : {user} Powered By Ledger"
+        f"Regards,\n"
+        f"{user} \n "
+        f"Powered By Ledger"
     )
     
     # Encode the message for the URL
-    encoded_message = message_body.replace(' ', '%20').replace('\n', '%0A')
+    import urllib.parse
+    encoded_message = urllib.parse.quote(message_body)  # Properly encode the message for a URL
     
     # Generate the WhatsApp Click-to-Chat URL
     whatsapp_url = f"https://wa.me/{customer_mobile}?text={encoded_message}"
@@ -239,13 +242,16 @@ def send_reminder(customer_id):
     """
     # Get the customer details from the database
     customer = Customer.query.get_or_404(customer_id)
+
+    # Use flask-login's `current_user` to get the logged-in user's username
     user = current_user.username
+
     reminder_details = f"Unpaid bills for {customer.name}"  # Customize this as needed
     amount = customer.amount  # Fetch customer's total due amount
-    
+
     # Generate the WhatsApp Click-to-Chat URL
-    whatsapp_url = generate_click_to_chat_url(customer.name, customer.mobile, reminder_details,user, amount)
-    
+    whatsapp_url = generate_click_to_chat_url(customer.name, customer.mobile, reminder_details, amount, user)
+
     # Redirect the user to the WhatsApp Click-to-Chat URL
     return redirect(whatsapp_url)
 
@@ -295,10 +301,7 @@ def run_flask():
     app.run(debug=False, use_reloader=False)
 
 
-if __name__ == '__main__':
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.daemon = True
-    flask_thread.start()
 
-    webview.create_window('Ledger - Rakho Pai Pai Ka Hisaab', 'http://127.0.0.1:5000', width=1000, height=600, background_color="#F0F0F0")
-    webview.start()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+

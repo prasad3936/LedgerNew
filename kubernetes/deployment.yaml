@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledgerapp
+  labels:
+    app: ledgerapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ledgerapp
+  template:
+    metadata:
+      labels:
+        app: ledgerapp
+    spec:
+      containers:
+        - name: ledgerapp
+          image: ghcr.io/prasad3936/ledgernew:sha-094905b33b60719322b438182ade158390a8d4f7
+          # Image will be automatically updated by CI/CD pipeline
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      imagePullSecrets:
+        - name: github-container-registry
+
