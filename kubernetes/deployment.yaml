@@ -17,10 +17,9 @@ spec:
       containers:
         - name: ledgerapp
           image: ghcr.io/prasad3936/ledgernew:sha-9cb641d5dce0d162e0d6f76f73159e0800c2aae7
-          # Image will be automatically updated by CI/CD pipeline
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 5000
           resources:
             limits:
               cpu: "0.5"
@@ -31,15 +30,14 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 5000
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 5000
             initialDelaySeconds: 5
             periodSeconds: 5
       imagePullSecrets:
         - name: github-container-registry
-
