@@ -13,8 +13,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Configuration for SQLite Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customer_db.sqlite'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://DB_USER:DB_PASS@mysql-1f761a7d-prasadcpatil246-f8f0.b.aivencloud.com:14627/ledgerdb'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customer_db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://DB_USER:DB_PASS@mysql-1f761a7d-prasadcpatil246-f8f0.b.aivencloud.com:14627/ledgerdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
