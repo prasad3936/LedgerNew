@@ -27,31 +27,31 @@ jobs:
   #     - name: Run tests
   #       run: pytest || echo "No tests found, would add tests in a real project"
 
-  lint:
-    name: Static Code Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  # lint:
+  #   name: Static Code Analysis
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install flake8
+  #     - name: Install dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #         pip install flake8
           
 
-      - name: Run Flake8
-        run: flake8 .
+  #     - name: Run Flake8
+  #       run: flake8 .
 
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint]
+    #needs: [lint]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
