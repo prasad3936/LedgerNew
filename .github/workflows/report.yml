@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths-ignore:
       - "kubernetes/deployment.yaml" # Ignore changes to this file to prevent loops
-      - "readme.md"
+      - "README.md" # Ignore changes to the README file
   pull_request:
     branches: [main]
 
@@ -60,21 +60,18 @@ jobs:
           ignore-unfixed: true
           vuln-type: "os,library"
 
-      - name: Send vulnerability scan report via email
+      - name: Send scan report via email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Trivy Vulnerability Scan Report"
-          body: |
-            Please find the attached vulnerability scan report for the Docker image.
-          to: prasadcpatil246@gmail.com.com
+          subject: "Trivy Scan Report"
+          body: "Please find the attached Trivy vulnerability scan report."
+          to: recipient@example.com
           from: ${{ secrets.EMAIL_USERNAME }}
-          # The value of EMAIL_USERNAME will be retrieved from the GitHub Actions secrets.
-          # It is defined as `${{ secrets.EMAIL_USERNAME }}` in the workflow.
-          # You need to set this secret in your GitHub repository's settings under "Secrets and variables".
+          attachments: trivy-report.txt
 
       - name: Push Docker image
         uses: docker/build-push-action@v5
