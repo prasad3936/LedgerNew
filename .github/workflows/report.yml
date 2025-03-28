@@ -69,7 +69,7 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "Trivy Scan Report"
           body: "Please find the attached Trivy vulnerability scan report."
-          to: recipient@example.com
+          to: prasadcpatil246@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
           attachments: trivy-report.txt
 
