@@ -58,7 +58,7 @@ jobs:
           format: "table"
           exit-code: "0"
           ignore-unfixed: true
-          vuln-type: "os,library"
+            output: trivy-report-${{ github.sha }}.txt
 
       - name: Send scan report via email
         uses: dawidd6/action-send-mail@v3
@@ -71,7 +71,7 @@ jobs:
           body: "Please find the attached Trivy vulnerability scan report."
           to: prasadcpatil246@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
-          attachments: trivy-report.txt
+          attachments: trivy-report-${{ github.sha }}.txt
 
       - name: Push Docker image
         uses: docker/build-push-action@v5
