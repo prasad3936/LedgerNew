@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ledgerapp
-          image: ghcr.io/prasad3936/ledgernew:sha-3056a0257f2b1c6f52cd07c2a8291bfca4662cbb
+          image: ghcr.io/prasad3936/ledgernew:sha-f0e57bbd0308424db4b44a59669ba68e00b489d9
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
