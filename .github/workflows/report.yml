@@ -100,6 +100,9 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          
+      - name: Pull latest changes
+        run: git pull origin main
 
       - name: Update Kubernetes deployment file
         env:
